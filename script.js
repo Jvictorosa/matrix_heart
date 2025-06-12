@@ -2,13 +2,25 @@ const button = document.getElementById('startBtn');
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  updateDrops();
+}
+
+window.addEventListener('resize', resizeCanvas);
 
 const letters = 'アァイィウヴカキクケコサシスセソタチツテトナニヌネノハヒフヘホ0123456789愛';
 const fontSize = 16;
-const columns = Math.floor(canvas.width / fontSize);
-const drops = Array(columns).fill(1);
+let drops = [];
+
+function updateDrops() {
+  const columns = Math.floor(canvas.width / fontSize);
+  drops.length = columns;
+  drops.fill(1);
+}
+
+resizeCanvas();
 
 const heartASCII = `
 ⠀⠀⠀⠀⠀⢸⣆⣀⣀⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⡎⠀⠀⠀⠀
@@ -25,7 +37,7 @@ const heartASCII = `
 ⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⡁⠀⠀⠙⣿⣻⠇⠀⠀⢈⣷⠃⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠘⠁⠉⠓⢦⣀⠘⡏⢀⡴⠚⠉⠀⠃⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢮⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡇⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀`
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡇⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀`;
 
 const heartChars = [];
 
@@ -34,16 +46,11 @@ function processHeart() {
   lines.forEach((line, row) => {
     [...line].forEach((char, col) => {
       if (char !== '⠀') {
-        heartChars.push({
-          char,
-          x: col,
-          y: row
-        });
+        heartChars.push({ char, x: col, y: row });
       }
     });
   });
 
-  // Calcular largura e altura do coração baseado no ASCII
   const lineLengths = lines.map(line => line.length);
   heartWidth = Math.max(...lineLengths);
   heartHeight = lines.length;
@@ -58,7 +65,7 @@ let heartIndex = 0;
 let heartFullyFormed = false;
 let blinkVisible = true;
 let blinkTimer = 0;
-const blinkInterval = 500; // ms
+const blinkInterval = 500;
 
 function drawMatrix() {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -82,11 +89,9 @@ function drawMatrix() {
   }
 
   if (!heartFullyFormed) {
-    // Controle de velocidade - quantos caracteres são desenhados por frame
-    const charsPerFrame = 3; // ← Altere este valor para controlar a velocidade
+    const charsPerFrame = 3;
     for (let i = 0; i < charsPerFrame && heartIndex < heartChars.length; i++) {
       const { char, x, y } = heartChars[heartIndex];
-
       const drawX = canvas.width / 2 - (heartWidth * fontSize) / 2 + x * fontSize;
       const drawY = canvas.height / 2 - (heartHeight * fontSize) / 2 + y * fontSize;
 
@@ -101,7 +106,6 @@ function drawMatrix() {
       blinkTimer = Date.now();
     }
   } else {
-    // Piscar coração completo
     const now = Date.now();
     if (now - blinkTimer > blinkInterval) {
       blinkVisible = !blinkVisible;
@@ -123,5 +127,6 @@ function drawMatrix() {
 button.addEventListener('click', () => {
   button.style.display = 'none';
   canvas.style.display = 'block';
+  resizeCanvas();
   setInterval(drawMatrix, 50);
 });
