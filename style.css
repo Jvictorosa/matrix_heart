@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  background-color: black;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: monospace;
+}
+
+#startBtn {
+  position: absolute;
+  z-index: 10;
+  padding: 20px 40px;
+  font-size: 24px;
+  background: #ff00dd;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+canvas {
+  display: none;
+}
