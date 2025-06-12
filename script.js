@@ -83,7 +83,7 @@ function drawMatrix() {
 
   if (!heartFullyFormed) {
     // Controle de velocidade - quantos caracteres são desenhados por frame
-    const charsPerFrame = 10; // ← Altere este valor para controlar a velocidade
+    const charsPerFrame = 3; // ← Altere este valor para controlar a velocidade
     for (let i = 0; i < charsPerFrame && heartIndex < heartChars.length; i++) {
       const { char, x, y } = heartChars[heartIndex];
 
