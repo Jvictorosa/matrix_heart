@@ -89,7 +89,7 @@ function drawMatrix() {
   }
 
   if (!heartFullyFormed) {
-    const charsPerFrame = 10;
+    const charsPerFrame = 3;
     for (let i = 0; i < charsPerFrame && heartIndex < heartChars.length; i++) {
       const { char, x, y } = heartChars[heartIndex];
       const drawX = canvas.width / 2 - (heartWidth * fontSize) / 2 + x * fontSize;
