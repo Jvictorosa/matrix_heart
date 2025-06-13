@@ -4,23 +4,71 @@ html, body {
   width: 100%;
   height: 100%;
   background-color: black;
+  background-image: url('./img/lanterns1.jpg'); /* imagem de fundo */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   overflow: hidden;
   font-family: monospace;
 }
 
+
 #startBtn {
   position: absolute;
   z-index: 10;
-  padding: 20px 40px;
-  font-size: 24px;
-  background: #ff00dd;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 150px;
+  height: auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  animation: rotateSlow 20s linear infinite; /* rotação lenta */
+}
+
+#startBtn img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none; /* Para garantir que o clique seja no botão, não na imagem */
+}
+
+/* Efeito de brilho permanente */
+#startBtn:hover {
+filter: drop-shadow(0 0 10px yellow) drop-shadow(0 0 20px yellow);
+}
+
+/* Animação ao clique */
+#startBtn.clicked {
+  animation: pulseDropShadow 0.5s ease;
+}
+
+@keyframes pulseDropShadow {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    filter: drop-shadow(0 0 10px yellow) drop-shadow(0 0 20px yellow);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    filter: drop-shadow(0 0 20px yellow) drop-shadow(0 0 40px yellow);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    filter: drop-shadow(0 0 10px yellow) drop-shadow(0 0 20px yellow);
+  }
+}
+
+@keyframes rotateSlow {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 canvas {
@@ -29,5 +77,3 @@ canvas {
   top: 0;
   left: 0;
 }
- 
-
