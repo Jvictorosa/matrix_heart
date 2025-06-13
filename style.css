@@ -4,14 +4,10 @@ html, body {
   width: 100%;
   height: 100%;
   background-color: black;
-  background-image: url('./img/lanterns1.jpg'); /* imagem de fundo */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   overflow: hidden;
   font-family: monospace;
+  background-image: url('./img/lanterns1.jpg')
 }
-
 
 #startBtn {
   position: absolute;
@@ -25,50 +21,28 @@ html, body {
   padding: 0;
   width: 150px;
   height: auto;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  animation: rotateSlow 20s linear infinite; /* rotação lenta */
+  animation: rotate 10s linear infinite; /* rotação contínua */
+  filter: drop-shadow(0 0 15px yellow);  /* brilho em volta do PNG */
 }
 
+/* Garante que o botão continue clicável mesmo com o filtro */
 #startBtn img {
   width: 100%;
   height: auto;
   display: block;
-  pointer-events: none; /* Para garantir que o clique seja no botão, não na imagem */
+  pointer-events: none;
 }
 
-/* Efeito de brilho permanente */
-#startBtn:hover {
-filter: drop-shadow(0 0 10px yellow) drop-shadow(0 0 20px yellow);
-}
-
-/* Animação ao clique */
+/* Removido: brilho retangular ao clique */
 #startBtn.clicked {
-  animation: pulseDropShadow 0.5s ease;
+  /* Animação pode ser mantida se quiser uma leve pulsação ao clicar */
+  animation: rotate 10s linear infinite; /* continua rodando */
 }
 
-@keyframes pulseDropShadow {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    filter: drop-shadow(0 0 10px yellow) drop-shadow(0 0 20px yellow);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.1);
-    filter: drop-shadow(0 0 20px yellow) drop-shadow(0 0 40px yellow);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    filter: drop-shadow(0 0 10px yellow) drop-shadow(0 0 20px yellow);
-  }
-}
-
-@keyframes rotateSlow {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
+/* Definição da rotação */
+@keyframes rotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 canvas {
@@ -76,4 +50,34 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+/* Balões de amor */
+.love-bubble {
+  position: fixed;
+  padding: 0.5em 1em;         /* aumenta o padding */
+  font-size: 1rem;
+  max-width: 25vw;            /* limite máximo da largura */
+  min-width: 80px;            /* largura mínima para evitar balões minúsculos */
+  white-space: normal;        /* permite quebra de linha */
+  word-wrap: break-word;      /* quebra palavra grande */
+  overflow-wrap: break-word;  /* compatibilidade */
+  border-radius: 12px;
+  background: rgb(255, 41, 109, 0.5) ;
+  color: white;
+  box-shadow: 0 0 8px #ff2a6d;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  transform: scale(0.8);
+  animation: fadeInOut 4s forwards;
+  z-index: 9999;
+  box-sizing: border-box;     /* inclui padding na largura */
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: scale(0.8); }
+  10% { opacity: 1; transform: scale(1); }
+  90% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.8); }
 }

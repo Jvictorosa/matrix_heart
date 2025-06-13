@@ -32,14 +32,16 @@ const heartASCII = `
   ⠘⣿⣧⠀⢻⢷⣻⣳⣟⡾⣽⣳⢯⣟⣯⣟⣷⣻⡞⠀⣼⣿⠃⠀
 ⠀  ⠹⣿⣆⠈⢾⢯⡿⣽⣳⢯⣟⡾⣽⢯⡽⣯⡟⠁⣴⣿⠟⠀⠀
 ⠀⠀  ⠙⣿⣧⡄⠻⣽⣳⢯⣟⡾⣽⢯⡿⣽⠓⢀⣼⣿⠋⠀⠀⠀
-⠀⠀⠀  ⠈⠻⣿⣦⠀⠫⣟⡾⣽⢯⣷⠛⠁ ⣴⣿⠟⠁⠀⠀⠀⠀
-⠀⠀⠀⠀⠀   ⠙⢿⣷⣄⠈⠻⣽⠛⠀⣠⣾⡿⠋⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀   ⠙⢿⣷⣤⡀⣠⣾⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀ ⠀  ⠙⢿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀⠀   
+⠀⠀⠀  ⠈⠻⣿⣦⠀⠫⣟⡾⣽⢯⣷⠛⠁⣴⣿⠟⠁⠀⠀⠀⠀
+⠀⠀⠀⠀⠀  ⠙⢿⣷⣄⠈⠻⣽⠛⠀⣠⣾⡿⠋⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀  ⠙⢿⣷⣤⡀⣠⣾⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀ ⠀ ⠙⢿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀⠀ ⠉
 `;
 
 const heartChars = [];
+let heartWidth = 0;
+let heartHeight = 0;
 
 function processHeart() {
   const lines = heartASCII.trim().split('\n');
@@ -55,9 +57,6 @@ function processHeart() {
   heartWidth = Math.max(...lineLengths);
   heartHeight = lines.length;
 }
-
-let heartWidth = 0;
-let heartHeight = 0;
 
 processHeart();
 
@@ -124,15 +123,87 @@ function drawMatrix() {
   }
 }
 
-// 👇 Efeito de clique com brilho e animação
-button.addEventListener('click', () => {
-  button.classList.add('clicked');
+// Mostrar balões de amor
 
-  setTimeout(() => {
-    button.style.display = 'none';
-    canvas.style.display = 'block';
-    resizeCanvas();
-    setInterval(drawMatrix, 50);
-    button.classList.remove('clicked');
-  }, 500); // tempo da animação
+const messages = [
+  'Eu te amo Japa 💖',
+  'Vejo enfim a Luz brilhar🌟',
+  'Minha mais sincera e linda oração💘',
+  'Tantos dias sonhando acordado 🌟',
+  'você mudou tudo 🌟',
+  'Você é o meu novo sonho.❤️',
+  'É você a luz🌟',
+];
+
+const activeBubbles = []; // Guarda posições dos balões ativos
+
+function isOverlapping(rect1, rect2) {
+  return !(
+    rect1.left + rect1.width < rect2.left ||
+    rect1.left > rect2.left + rect2.width ||
+    rect1.top + rect1.height < rect2.top ||
+    rect1.top > rect2.top + rect2.height
+  );
+}
+
+function showLoveBubble() {
+  const bubble = document.createElement('div');
+  bubble.className = 'love-bubble';
+  bubble.textContent = messages[Math.floor(Math.random() * messages.length)];
+
+  const container = document.getElementById('bubbleContainer');
+  container.appendChild(bubble);
+
+  requestAnimationFrame(() => {
+    const bubbleRect = bubble.getBoundingClientRect();
+    const screenW = window.innerWidth;
+    const screenH = window.innerHeight;
+
+    const maxX = screenW - bubbleRect.width - 10;
+    const maxY = screenH - bubbleRect.height - 10;
+
+    let x, y;
+    const maxAttempts = 50;
+    let attempts = 0;
+    let overlapping;
+
+    do {
+      x = Math.random() * maxX;
+      y = Math.random() * maxY;
+
+      const newRect = { left: x, top: y, width: bubbleRect.width, height: bubbleRect.height };
+
+      overlapping = activeBubbles.some(existingRect => isOverlapping(newRect, existingRect));
+      attempts++;
+    } while (overlapping && attempts < maxAttempts);
+
+    if (overlapping) {
+      // Se não conseguiu achar posição sem sobreposição, remove o balão e sai
+      bubble.remove();
+      return;
+    }
+
+    bubble.style.left = `${x}px`;
+    bubble.style.top = `${y}px`;
+
+    // Salva a posição para futuras colisões
+    activeBubbles.push({ left: x, top: y, width: bubbleRect.width, height: bubbleRect.height });
+
+    setTimeout(() => {
+      bubble.remove();
+      // Remove da lista de posições
+      const index = activeBubbles.findIndex(rect => rect.left === x && rect.top === y);
+      if (index !== -1) {
+        activeBubbles.splice(index, 1);
+      }
+    }, 4000);
+  });
+}
+
+button.addEventListener('click', () => {
+  button.style.display = 'none';
+  canvas.style.display = 'block';
+  resizeCanvas();
+  setInterval(drawMatrix, 50);
+  setInterval(showLoveBubble, 1200);
 });
