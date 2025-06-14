@@ -128,11 +128,17 @@ function drawMatrix() {
 const messages = [
   'Eu te amo Japa 💖',
   'Vejo enfim a Luz brilhar🌟',
-  'Minha mais sincera e linda oração💘',
   'Tantos dias sonhando acordado 🌟',
   'você mudou tudo 🌟',
-  'Você é o meu novo sonho.❤️',
+  'Você é o meu novo sonho🌟',
   'É você a luz🌟',
+  'De todos os mundos que a gente podia ter, escolhi você🌟',
+  'Todos temos um sonho 🌟',
+  'Isso quer dizer que valeu a pena...tudo🌟',
+  'Você foi a melhor coisa que já me aconteceu🌟',
+  'Com você, o mundo ficou maior 🌟',
+
+
 ];
 
 const activeBubbles = []; // Guarda posições dos balões ativos
