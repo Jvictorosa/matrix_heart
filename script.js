@@ -137,11 +137,10 @@ const messages = [
   'Isso quer dizer que valeu a pena...tudo🌟',
   'Você foi a melhor coisa que já me aconteceu🌟',
   'Com você, o mundo ficou maior 🌟',
-
-
 ];
 
 const activeBubbles = []; // Guarda posições dos balões ativos
+let availableMessages = [...messages]; // Mensagens que ainda podem ser usadas
 
 function isOverlapping(rect1, rect2) {
   return !(
@@ -153,9 +152,18 @@ function isOverlapping(rect1, rect2) {
 }
 
 function showLoveBubble() {
+  // Se todas as mensagens foram usadas, reseta
+  if (availableMessages.length === 0) {
+    availableMessages = [...messages];
+  }
+
+  // Escolhe uma mensagem que ainda não está sendo exibida
+  const index = Math.floor(Math.random() * availableMessages.length);
+  const selectedMessage = availableMessages.splice(index, 1)[0];
+
   const bubble = document.createElement('div');
   bubble.className = 'love-bubble';
-  bubble.textContent = messages[Math.floor(Math.random() * messages.length)];
+  bubble.textContent = selectedMessage;
 
   const container = document.getElementById('bubbleContainer');
   container.appendChild(bubble);
@@ -184,8 +192,8 @@ function showLoveBubble() {
     } while (overlapping && attempts < maxAttempts);
 
     if (overlapping) {
-      // Se não conseguiu achar posição sem sobreposição, remove o balão e sai
       bubble.remove();
+      availableMessages.push(selectedMessage); // devolve a mensagem à lista
       return;
     }
 
@@ -197,11 +205,17 @@ function showLoveBubble() {
 
     setTimeout(() => {
       bubble.remove();
-      // Remove da lista de posições
+
       const index = activeBubbles.findIndex(rect => rect.left === x && rect.top === y);
       if (index !== -1) {
         activeBubbles.splice(index, 1);
       }
+
+      // Após o balão desaparecer, devolve a mensagem para uso futuro
+      if (!availableMessages.includes(selectedMessage)) {
+        availableMessages.push(selectedMessage);
+      }
+
     }, 4000);
   });
 }
